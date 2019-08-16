@@ -18,16 +18,18 @@ for row in range(s.nrows):
     if col_search:
         for col in range(s.ncols):
             contents = s.cell(row, col).value
-            if contents == "Amount":
+            if contents == "Amount" or contents == "KD. Equivalent ":
                 amount_col = col
                 col_search = False # done searching
-            elif contents == "Transaction Date":
+            elif contents == "Post Date":
                 transaction_date_col = col
-            elif contents == "Details":
+            elif contents == "Transaction Date" and transaction_date_col == -1:
+                transaction_date_col = col
+            elif contents == "Details" or contents == "Transaction Details":
                 details_col = col
     else:
         try:
-            amount = s.cell(row, amount_col).value.split("\n")[0]
+            amount = str(s.cell(row, amount_col).value).split("\n")[0]
             transaction_date = s.cell(row, transaction_date_col).value.split("\n")[0]
             details = s.cell(row, details_col).value.split("\n")[0]
             Decimal(amount)
