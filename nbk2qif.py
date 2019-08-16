@@ -10,6 +10,7 @@ col_search = True
 amount_col = -1
 transaction_date_col = -1
 details_col = -1
+credit_card = False
 
 transactions = []
 
@@ -21,6 +22,7 @@ for row in range(s.nrows):
             if contents == "Amount" or contents == "KD. Equivalent ":
                 amount_col = col
                 col_search = False # done searching
+                credit_card = contents == "KD. Equivalent "
             elif contents == "Post Date":
                 transaction_date_col = col
             elif contents == "Transaction Date" and transaction_date_col == -1:
@@ -32,7 +34,12 @@ for row in range(s.nrows):
             amount = str(s.cell(row, amount_col).value).split("\n")[0]
             transaction_date = s.cell(row, transaction_date_col).value.split("\n")[0]
             details = s.cell(row, details_col).value.split("\n")[0]
-            Decimal(amount)
+            
+            if credit_card:
+                amount = str(-1 * Decimal(amount))
+            else:
+                Decimal(amount)
+            
             transactions.append((transaction_date, amount, details))
         except InvalidOperation:
             pass
