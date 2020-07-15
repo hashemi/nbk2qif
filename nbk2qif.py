@@ -2,8 +2,14 @@ import sys
 from xlrd import open_workbook
 from decimal import Decimal, InvalidOperation
 
-book = open_workbook(sys.argv[1])
-s = book.sheet_by_index(0)
+if sys.argv[1] == '--csv':
+    output_format = 'csv'
+    book = open_workbook(sys.argv[2])
+    s = book.sheet_by_index(0)
+else:
+    output_format = 'qif'
+    book = open_workbook(sys.argv[1])
+    s = book.sheet_by_index(0)
 
 col_search = True
 
@@ -44,9 +50,14 @@ for row in range(s.nrows):
         except InvalidOperation:
             pass
 
-print("!Type:Bank")
-for t in transactions:
-    print("D" + t[0])
-    print("T" + t[1])
-    print("P" + t[2])
-    print("^")
+if output_format == 'csv':
+    print('date,amount,details')
+    for t in transactions:
+        print('{},{},{}'.format(*t))
+elif output_format == 'qif':
+    print("!Type:Bank")
+    for t in transactions:
+        print("D" + t[0])
+        print("T" + t[1])
+        print("P" + t[2])
+        print("^")
