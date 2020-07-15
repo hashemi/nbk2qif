@@ -11,7 +11,7 @@ pip install -r requirements.txt
 ## Usage
 
 ```sh
-$ python nbk2qif input-filename.xls > output-filename.qif
+python nbk2qif.py input-filename.xls > output-filename.qif
 ```
 
 ## License
